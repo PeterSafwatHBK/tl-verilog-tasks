@@ -1,0 +1,59 @@
+read_verilog -sv ripple.sv
+hierarchy -top top
+proc
+
+# Protect everything from deletion by any pass (incl. submod's own
+# internal opt_clean), since nothing here drives passed/failed.
+setattr -set keep 1
+
+# Split FIRST, before any optimization can rename/merge wires like
+# Slice_out_a0[N] into L0_result_a0[N] out from under our `select` patterns.
+
+select -set fa0_out  w:\Slice_out_a0\[0\] w:\Slice_carry_out_a0\[0\] %ci*
+select -set fa0_in   w:\L1_Slice\[0\].L1_in1_a0 w:\L1_Slice\[0\].L1_in2_a0 w:\L1b_Slice\[0\].L1_carry_in_a0 %ci*
+select -set fa0 @fa0_out @fa0_in %d c:* %i
+submod -name fa_0 @fa0
+
+select -set fa1_out  w:\Slice_out_a0\[1\] w:\Slice_carry_out_a0\[1\] %ci*
+select -set fa1_in   w:\L1_Slice\[1\].L1_in1_a0 w:\L1_Slice\[1\].L1_in2_a0 w:\L1b_Slice\[1\].L1_carry_in_a0 %ci*
+select -set fa1 @fa1_out @fa1_in %d c:* %i
+submod -name fa_1 @fa1
+
+select -set fa2_out  w:\Slice_out_a0\[2\] w:\Slice_carry_out_a0\[2\] %ci*
+select -set fa2_in   w:\L1_Slice\[2\].L1_in1_a0 w:\L1_Slice\[2\].L1_in2_a0 w:\L1b_Slice\[2\].L1_carry_in_a0 %ci*
+select -set fa2 @fa2_out @fa2_in %d c:* %i
+submod -name fa_2 @fa2
+
+select -set fa3_out  w:\Slice_out_a0\[3\] w:\Slice_carry_out_a0\[3\] %ci*
+select -set fa3_in   w:\L1_Slice\[3\].L1_in1_a0 w:\L1_Slice\[3\].L1_in2_a0 w:\L1b_Slice\[3\].L1_carry_in_a0 %ci*
+select -set fa3 @fa3_out @fa3_in %d c:* %i
+submod -name fa_3 @fa3
+
+select -set fa4_out  w:\Slice_out_a0\[4\] w:\Slice_carry_out_a0\[4\] %ci*
+select -set fa4_in   w:\L1_Slice\[4\].L1_in1_a0 w:\L1_Slice\[4\].L1_in2_a0 w:\L1b_Slice\[4\].L1_carry_in_a0 %ci*
+select -set fa4 @fa4_out @fa4_in %d c:* %i
+submod -name fa_4 @fa4
+
+select -set fa5_out  w:\Slice_out_a0\[5\] w:\Slice_carry_out_a0\[5\] %ci*
+select -set fa5_in   w:\L1_Slice\[5\].L1_in1_a0 w:\L1_Slice\[5\].L1_in2_a0 w:\L1b_Slice\[5\].L1_carry_in_a0 %ci*
+select -set fa5 @fa5_out @fa5_in %d c:* %i
+submod -name fa_5 @fa5
+
+select -set fa6_out  w:\Slice_out_a0\[6\] w:\Slice_carry_out_a0\[6\] %ci*
+select -set fa6_in   w:\L1_Slice\[6\].L1_in1_a0 w:\L1_Slice\[6\].L1_in2_a0 w:\L1b_Slice\[6\].L1_carry_in_a0 %ci*
+select -set fa6 @fa6_out @fa6_in %d c:* %i
+submod -name fa_6 @fa6
+
+select -set fa7_out  w:\Slice_out_a0\[7\] w:\Slice_carry_out_a0\[7\] %ci*
+select -set fa7_in   w:\L1_Slice\[7\].L1_in1_a0 w:\L1_Slice\[7\].L1_in2_a0 w:\L1b_Slice\[7\].L1_carry_in_a0 %ci*
+select -set fa7 @fa7_out @fa7_in %d c:* %i
+submod -name fa_7 @fa7
+
+hierarchy -top top
+
+# Safe to optimize now — every module boundary is already fixed in place.
+opt_expr
+opt_clean
+
+ls
+write_verilog -noattr split_out.v

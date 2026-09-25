@@ -1,0 +1,20 @@
+read_verilog -sv top.sv; hierarchy -top top; proc; splitnets; setattr -set keep 1 w:Slice_out_a0* w:Slice_carry_out_a0*; opt_clean
+select -set fa_0 c:$add$ripple.tlv:10$3 c:$add$ripple.tlv:10$4 c:$gt$ripple.tlv:10$5 c:$xor$ripple.tlv:9$1
+submod -name fa_0 @fa_0
+select -set fa_1 c:$add$ripple.tlv:10$8 c:$add$ripple.tlv:10$9 c:$gt$ripple.tlv:10$10 c:$xor$ripple.tlv:9$6 c:$xor$ripple.tlv:9$7
+submod -name fa_1 @fa_1
+select -set fa_2 c:$add$ripple.tlv:10$13 c:$add$ripple.tlv:10$14 c:$gt$ripple.tlv:10$15 c:$xor$ripple.tlv:9$11 c:$xor$ripple.tlv:9$12
+submod -name fa_2 @fa_2
+select -set fa_3 c:$add$ripple.tlv:10$18 c:$add$ripple.tlv:10$19 c:$gt$ripple.tlv:10$20 c:$xor$ripple.tlv:9$16 c:$xor$ripple.tlv:9$17
+submod -name fa_3 @fa_3
+select -set fa_4 c:$add$ripple.tlv:10$23 c:$add$ripple.tlv:10$24 c:$gt$ripple.tlv:10$25 c:$xor$ripple.tlv:9$21 c:$xor$ripple.tlv:9$22
+submod -name fa_4 @fa_4
+select -set fa_5 c:$add$ripple.tlv:10$28 c:$add$ripple.tlv:10$29 c:$gt$ripple.tlv:10$30 c:$xor$ripple.tlv:9$26 c:$xor$ripple.tlv:9$27
+submod -name fa_5 @fa_5
+select -set fa_6 c:$add$ripple.tlv:10$33 c:$add$ripple.tlv:10$34 c:$gt$ripple.tlv:10$35 c:$xor$ripple.tlv:9$31 c:$xor$ripple.tlv:9$32
+submod -name fa_6 @fa_6
+select -set fa_7 c:$add$ripple.tlv:10$38 c:$add$ripple.tlv:10$39 c:$gt$ripple.tlv:10$40 c:$xor$ripple.tlv:9$36 c:$xor$ripple.tlv:9$37
+submod -name fa_7 @fa_7
+hierarchy -top top
+write_verilog -noattr hier_out.v
+write_json hier_out.json

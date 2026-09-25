@@ -1,0 +1,6 @@
+read_verilog -sv pythagoras.sv; hierarchy -top pythagoras; proc; splitnets; setattr -set keep 1 w:CALC_aa_sq_a1* w:CALC_bb_sq_a1*; opt_clean
+select -set stage_0 c:$pow$pythagoras.tlv:14$3 c:$pow$pythagoras.tlv:15$4
+submod -name stage_0 @stage_0
+hierarchy -top pythagoras
+write_verilog -noattr split_out.v
+write_json split.json

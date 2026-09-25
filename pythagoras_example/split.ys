@@ -1,0 +1,24 @@
+# Usage: yosys -s split.ys
+# Reads SandPiper's flat SV and moves each pipeline stage into its own module.
+
+# 1. Read the flat SV that SandPiper generated
+read_verilog -sv pythagoras.sv
+hierarchy -top pythagoras
+proc
+opt_clean
+
+# 2. Pick the logic that drives each stage's signals.
+#    Yosys uses wildcards (*, ?), not regexes.
+#    If a wire is aliased to a port, Yosys keeps the PORT name, so the
+#    port wire (cc_sq_out) is added to stage 2 by hand.
+select -set s1 w:*_a1 %ci1 c:* %i
+select -set s2 w:*_a2 w:cc_sq_out %u %ci1 c:* %i
+
+# 3. Move each selection into its own module
+submod -name stage1 @s1
+submod -name stage2 @s2
+
+# 4. Show and save the result
+hierarchy -top pythagoras
+ls
+write_verilog -noattr split_out_ys.v

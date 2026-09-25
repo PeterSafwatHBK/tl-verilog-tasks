@@ -1,0 +1,28 @@
+# Read the flat SV output
+read_verilog -sv life_flat.sv
+
+# Elaborate - blackbox pseudo_rand since it's not defined here
+hierarchy -top top -blackbox
+
+# Convert always_ff to netlists
+proc
+
+# Flatten all generate blocks into one module
+flatten
+
+# Dump all wire names so we can see what Yosys has after flattening
+tee -o life_signals.txt ls
+
+# Try selecting the per-cell logic signals (the /yy /xx grid)
+select -module top w:*L3_Life_DEFAULT_Yy*
+tee -o life_selected.txt ls %
+
+# Attempt submod on the cell logic
+submod -name cell_logic
+
+# Clean up unused wires
+clean
+
+# Write result
+write_verilog -sv life_hier_out.sv
+
